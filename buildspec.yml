@@ -16,7 +16,7 @@ phases:
   # Install phase - set up the build environment
   install:
     runtime-versions:
-      nodejs: 18
+      nodejs: 22
     commands:
       - echo "Installing dependencies..."
       - npm --version
