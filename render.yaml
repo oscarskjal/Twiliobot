@@ -1,6 +1,12 @@
 services:
   - type: web
     name: twiliobot
-    env: node
-    buildCommand: npm install
-    startCommand: npm start
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
