@@ -1,0 +1,35 @@
+{
+  "Version": 1,
+  "Service": {
+    "Name": "twiliobot-service",
+    "SourceConfiguration": {
+      "ImageRepository": {
+        "ImageConfiguration": {
+          "Port": "3000",
+          "RuntimeEnvironmentVariables": {
+            "NODE_ENV": "production",
+            "PORT": "3000"
+          },
+          "RuntimeEnvironmentSecrets": {
+            "TWILIO_ACCOUNT_SID": "arn:aws:secretsmanager:us-east-1:ACCOUNT:secret:twiliobot/twilio-XXXXX:TWILIO_ACCOUNT_SID::",
+            "TWILIO_AUTH_TOKEN": "arn:aws:secretsmanager:us-east-1:ACCOUNT:secret:twiliobot/twilio-XXXXX:TWILIO_AUTH_TOKEN::",
+            "TWILIO_PHONE_NUMBER": "arn:aws:secretsmanager:us-east-1:ACCOUNT:secret:twiliobot/twilio-XXXXX:TWILIO_PHONE_NUMBER::"
+          }
+        }
+      }
+    },
+    "InstanceConfiguration": {
+      "Cpu": "0.25 vCPU",
+      "Memory": "0.5 GB"
+    },
+    "AutoScalingConfigurationArn": "arn:aws:apprunner:us-east-1:ACCOUNT:autoscalingconfiguration/DefaultConfiguration/1/00000000000000000000000000000001",
+    "HealthCheckConfiguration": {
+      "Protocol": "HTTP",
+      "Path": "/",
+      "Interval": 10,
+      "Timeout": 5,
+      "HealthyThreshold": 1,
+      "UnhealthyThreshold": 5
+    }
+  }
+}

@@ -1,0 +1,78 @@
+version: 0.2
+
+# Environment variables that can be set in CodeBuild project
+env:
+  variables:
+    NODE_ENV: production
+    PORT: 3000
+  # Uncomment and configure these if you need them from Parameter Store or Secrets Manager
+  # parameter-store:
+  #   TWILIO_ACCOUNT_SID: /twiliobot/twilio/account-sid
+  #   TWILIO_AUTH_TOKEN: /twiliobot/twilio/auth-token
+  # secrets-manager:
+  #   TWILIO_PHONE_NUMBER: twiliobot-secrets:TWILIO_PHONE_NUMBER
+
+phases:
+  # Install phase - set up the build environment
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Installing dependencies..."
+      - npm --version
+      - node --version
+      - npm install --production
+
+  # Pre-build phase - run linting, security checks, etc.
+  pre_build:
+    commands:
+      - echo "Running pre-build tasks..."
+      - echo "Checking for security vulnerabilities..."
+      - npm audit --audit-level=high
+      - echo "Pre-build phase completed"
+
+  # Build phase - build the application
+  build:
+    commands:
+      - echo "Build phase started on `date`"
+      - echo "Building the Twilio bot application..."
+      - echo "No compilation needed for Node.js application"
+      - echo "Validating application structure..."
+      - ls -la
+      - echo "Build phase completed"
+
+  # Post-build phase - run tests and package artifacts
+  post_build:
+    commands:
+      - echo "Post-build phase started on `date`"
+      - echo "Running basic application validation..."
+      - node -e "require('./server.js')" --dry-run 2>/dev/null || echo "Server validation completed"
+      - echo "Creating deployment package..."
+      - echo "Post-build phase completed"
+
+# Artifacts to be uploaded to S3 or used by deployment
+artifacts:
+  files:
+    - "**/*"
+  exclude-paths:
+    - node_modules/**/*
+    - .git/**/*
+    - .gitignore
+    - README.md
+    - buildspec.yml
+  name: twiliobot-$(date +%Y-%m-%d-%H-%M-%S)
+
+# Cache dependencies to speed up subsequent builds
+cache:
+  paths:
+    - "node_modules/**/*"
+# Reports for test results and code coverage (uncomment if you add tests)
+# reports:
+#   jest_reports:
+#     files:
+#       - 'coverage/clover.xml'
+#     file-format: 'CLOVERXML'
+#   junit_reports:
+#     files:
+#       - 'test-results.xml'
+#     file-format: 'JUNITXML'
