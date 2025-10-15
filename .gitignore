@@ -5,3 +5,22 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 *.log
+
+# Test coverage and reports
+coverage/
+junit.xml
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock

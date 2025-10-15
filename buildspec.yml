@@ -27,11 +27,13 @@ phases:
   pre_build:
     commands:
       - echo "Running pre-build tasks..."
+      - echo "Installing dev dependencies for testing..."
+      - npm install
       - echo "Checking for security vulnerabilities..."
       - npm audit --audit-level=high
       - echo "Pre-build phase completed"
 
-  # Build phase - build the application
+  # Build phase - build and test the application
   build:
     commands:
       - echo "Build phase started on `date`"
@@ -39,15 +41,23 @@ phases:
       - echo "No compilation needed for Node.js application"
       - echo "Validating application structure..."
       - ls -la
-      - echo "Build phase completed"
+      - echo "Running unit and integration tests..."
+      - npm test
+      - echo "Generating test coverage report..."
+      - npm run test:coverage
+      - echo "Build and test phase completed"
 
-  # Post-build phase - run tests and package artifacts
+  # Post-build phase - validate and package artifacts
   post_build:
     commands:
       - echo "Post-build phase started on `date`"
-      - echo "Running basic application validation..."
-      - node -e "require('./server.js')" --dry-run 2>/dev/null || echo "Server validation completed"
+      - echo "Running final application validation..."
+      - node -e "const {app} = require('./server.js'); console.log('✅ Server modules loaded successfully');"
+      - echo "Checking test coverage thresholds..."
       - echo "Creating deployment package..."
+      - echo "Cleaning up development dependencies for production build..."
+      - rm -rf node_modules
+      - npm install --production
       - echo "Post-build phase completed"
 
 # Artifacts to be uploaded to S3 or used by deployment
@@ -66,13 +76,16 @@ artifacts:
 cache:
   paths:
     - "node_modules/**/*"
-# Reports for test results and code coverage (uncomment if you add tests)
-# reports:
-#   jest_reports:
-#     files:
-#       - 'coverage/clover.xml'
-#     file-format: 'CLOVERXML'
-#   junit_reports:
-#     files:
-#       - 'test-results.xml'
-#     file-format: 'JUNITXML'
+
+# Reports for test results and code coverage
+reports:
+  jest_coverage:
+    files:
+      - "coverage/clover.xml"
+    file-format: "CLOVERXML"
+    name: "TwilioBot-Coverage-Report"
+  jest_junit:
+    files:
+      - "junit.xml"
+    file-format: "JUNITXML"
+    name: "TwilioBot-Test-Results"

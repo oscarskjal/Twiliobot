@@ -86,8 +86,13 @@ app.get("/", (req, res) => {
   );
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`🐔 Chicken Joke Bot listening at http://localhost:${port}`);
-  console.log("Voice Webhook URL: http://localhost:" + port + "/voice");
-});
+// Start the server only if this file is run directly
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`🐔 Chicken Joke Bot listening at http://localhost:${port}`);
+    console.log("Voice Webhook URL: http://localhost:" + port + "/voice");
+  });
+}
+
+// Export the app and functions for testing
+module.exports = { app, getRandomChickenJoke };
