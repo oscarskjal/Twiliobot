@@ -9,6 +9,7 @@ app.use(express.urlencoded({ extended: false }));
 // Chicken jokes
 const chickenJokes = [
   "Why did the chicken cross the road? To get to the other side! 🐔",
+  "Why did the chicken join a band? Because it had the drumsticks! 🐔", //Added joke
   "Why did the chicken cross the road? Because it was free-range! 🐔",
   "Why did the chicken cross the road? To prove it wasn't chicken! 🐔",
   "Why did the chicken cross the road? Because the road crossed the chicken first! 🐔",
